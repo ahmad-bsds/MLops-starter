@@ -20,14 +20,26 @@ def load_dataset_from_feature_store(feature_view_version=1):
     )
 
     feature_view = fs.get_or_create_feature_view(
-        name='customer_segmentation',
+        name='customer_segmentation_view_',
         version=feature_view_version,
-        query=selected_features
+        query=selected_features,
+        labels=["y"] # target variable
     )
 
     return feature_view.train_test_split(
         description='transactions fraud training dataset',
-        test_size=0.3,
+        test_size=0.2,
     )
 
-# X_train, X_test, y_train, y_test
+
+# X_train, X_test, y_train, y_test = load_dataset_from_feature_store()
+#
+# print("................X Training............")
+# print(X_train)
+# print("................X testing................")
+# print(X_test)
+#
+# print("................y Training............")
+# print(y_train)
+# print("................y testing................")
+# print(y_test)
