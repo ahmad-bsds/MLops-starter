@@ -76,3 +76,6 @@ def train():
 
 if __name__ == '__main__':
     fire.Fire(train)
+
+# TODO: add model artifact
+# TODO: save model to hopsworks model registry.
