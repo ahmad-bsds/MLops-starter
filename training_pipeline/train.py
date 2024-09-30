@@ -1,6 +1,8 @@
+import joblib
+
 from data import load_dataset_from_feature_store
 from model import processing_pipeline
-from comet_ml import Experiment
+from comet_ml import Experiment, Artifact
 from comet_ml.integration.sklearn import log_model
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score
 import fire
@@ -23,7 +25,7 @@ def train():
 
     logger.info("Training model...")
     # Fitting pipeline, training
-    pipe = pipeline.fit(X_train, y_train)
+    model = pipeline.fit(X_train, y_train)
 
     logger.info("Successfully trained model.")
 
@@ -58,12 +60,17 @@ def train():
             "accuracy_score": accuracy_score(y_test, y_pred)
         }
 
-    experiment.log_metric('classification_accuracy', metric(y_test, pipe.predict(X_test)))
+    experiment.log_metric('classification_accuracy', metric(y_test, model.predict(X_test)))
 
     logger.info("Successfully evaluated model.")
 
+    artifact = Artifact(name="model-alpha", artifact_type="model")
+    artifact.add("path/to/my/file.csv")
+    experiment.log_artifact(artifact)
+    experiment.end()
+
     # Log model
-    clf = pipe.named_steps['logistic_regression']
+    clf = model.named_steps['logistic_regression']
     return log_model(experiment, model=clf, model_name="TheModel")
 
 
