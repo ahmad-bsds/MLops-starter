@@ -1,4 +1,5 @@
 import joblib
+import pandas as pd
 
 from data import load_dataset_from_feature_store
 from model import processing_pipeline
@@ -66,7 +67,7 @@ def train():
 
     # Save model:
     logger.info("Saving model...")
-    save_model(model["logistic_regression"], "./model.pkl")
+    save_model(model, "./model.pkl")
     logger.info("Successfully saved model.")
 
     # Save artifact:
