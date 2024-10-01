@@ -1,7 +1,5 @@
-import os
 from dotenv import load_dotenv
-
-
+import os
 def load_env_variable(var_name, env_file_path='.env'):
     """
     Load an environment variable from a custom .env file.

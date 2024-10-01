@@ -6,7 +6,7 @@ from comet_ml import Experiment, Artifact
 from comet_ml.integration.sklearn import log_model
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score
 import fire
-from utils import get_logger
+from utils import get_logger, save_model
 
 logger = get_logger(__name__)
 
@@ -61,21 +61,31 @@ def train():
         }
 
     experiment.log_metric('classification_accuracy', metric(y_test, model.predict(X_test)))
-
+    experiment.log_confusion_matrix(y_test, model.predict(X_test))
     logger.info("Successfully evaluated model.")
 
-    artifact = Artifact(name="model-alpha", artifact_type="model")
-    artifact.add("path/to/my/file.csv")
-    experiment.log_artifact(artifact)
-    experiment.end()
+    # Save model:
+    logger.info("Saving model...")
+    save_model(model["logistic_regression"], "./model.pkl")
+    logger.info("Successfully saved model.")
 
-    # Log model
-    clf = model.named_steps['logistic_regression']
-    return log_model(experiment, model=clf, model_name="TheModel")
+    # Save artifact:
+    logger.info("Saving artifact...")
+    artifact = Artifact(name="model-alpha", artifact_type="model")
+    artifact.add("./model.pkl")
+    experiment.log_artifact(artifact)
+    logger.info("Successfully saved artifact.")
+
+    # Log model:
+    logger.info("Logging model...")
+    experiment.log_model("model-alpha", "./model.pkl")
+    logger.info("Successfully logged model.")
+
+    # Register model:
+    logger.info("Registering model...")
+    experiment.register_model("model-alpha")
+    logger.info("Successfully registered model.")
 
 
 if __name__ == '__main__':
     fire.Fire(train)
-
-# TODO: add model artifact
-# TODO: save model to hopsworks model registry.

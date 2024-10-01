@@ -1,4 +1,5 @@
 import logging
+import joblib
 
 
 def get_logger(name: str) -> logging.Logger:
@@ -23,4 +24,26 @@ def get_logger(name: str) -> logging.Logger:
 
     return logger
 
+
+def save_model(model, model_path="/"):
+    """
+    Template for saving a model.
+
+    Args:
+        model: Trained model.
+        model_path: Path to save the model.
+    """
+
+    joblib.dump(model, model_path)
+
+
+def load_model(model_path="./training_pipeline/model.pkl"):
+    """
+    Template for loading a model.
+
+    Args:
+        model_path: Path to load the model.
+    """
+
+    return joblib.load(model_path)
 
